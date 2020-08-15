@@ -21,7 +21,7 @@ After configuring the action, you GitHub Pages will be available at `http&#58;//
 ifdef::env-github[]
 == Live Demo
 
-We taste our own poison by publishing this reposiroty in http://manoelcampos.com/asciidoctor-ghpages-action/[GitHub Pages].
+We taste our own medicine by publishing this reposiroty in http://manoelcampos.com/asciidoctor-ghpages-action/[GitHub Pages].
 endif::[]
 
 == Configuration
