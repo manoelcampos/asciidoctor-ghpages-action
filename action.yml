@@ -5,6 +5,11 @@ branding:
   color: blue
 description: Recursively converts every adoc file to html, renaming resulting README.html to index.html
 
+inputs:
+  asciidoctor_params:
+    description: 'Extra parameters to passs to the asciidoctor command to customize the process of building adoc files'
+    required: false
+
 runs: 
   using: "composite"
 
@@ -36,7 +41,8 @@ runs:
 
   - name: Converting AsciiDoc files to HTML
     run: |
-      find . -name "*.adoc" | xargs asciidoctor -b html 
+      echo "Extra asciidoctor params: $INPUT_ASCIIDOCTOR_PARAMS"
+      find . -name "*.adoc" | xargs asciidoctor -b html $INPUT_ASCIIDOCTOR_PARAMS
       for FILE in `find . -name "README.html"`; do 
           mv "$FILE" "`dirname $FILE`/index.html"; 
       done
