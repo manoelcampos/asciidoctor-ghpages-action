@@ -9,7 +9,6 @@ inputs:
   asciidoctor_params:
     description: 'Extra parameters to passs to the asciidoctor command to customize the process of building adoc files'
     required: false
-    
 
 runs: 
   using: "composite"
@@ -23,7 +22,9 @@ runs:
     shell: bash
 
   - name: Asciidoctor Setup
-    run: sudo apt-get install asciidoctor -y   
+    run: |
+      sudo apt-get install gem -y
+      sudo gem install asciidoctor
     shell: bash
 
   # Avoids keeping the commit history for the gh-pages branch, 
@@ -44,7 +45,6 @@ runs:
     env: 
       INPUT_ASCIIDOCTOR_PARAMS: ${{ inputs.asciidoctor_params }}
     run: |
-      echo "Extra asciidoctor params: $INPUT_ASCIIDOCTOR_PARAMS"
       find . -name "*.adoc" | xargs asciidoctor -b html $INPUT_ASCIIDOCTOR_PARAMS
       for FILE in `find . -name "README.html"`; do 
           mv "$FILE" "`dirname $FILE`/index.html"; 
