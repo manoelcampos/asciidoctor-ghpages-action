@@ -1,10 +1,26 @@
+:icons: font
+ifdef::env-github[:outfilesuffix: .adoc]
+
+ifdef::env-github,env-browser[]
+// Exibe ícones para os blocos como NOTE e IMPORTANT no GitHub
+:caution-caption: :fire:
+:important-caption: :exclamation:
+:note-caption: :paperclip:
+:tip-caption: :bulb:
+:warning-caption: :warning:
+endif::[]
+
 = AsciiDoctor GitHub Pages
+
+ifdef::env-github[image:https://github.com/manoelcampos/asciidoctor-ghpages-action/workflows/asciidoctor-ghpages/badge.svg[GitHub Pages]]
 
 A GitHub Action that recursively converts every `adoc` file to `html`, renaming resulting `README.html` to `index.html` then pushing all generated html and existing files to the `gh-pages` branch. It also keeps only the latest commit on the `gh-pages` branch, stoping it to grow too much. 
 
+ifdef::env-github[]
 == Live Demo
 
 We use our own poison. This repository is published in http://manoelcampos.com/asciidoctor-ghpages-action/[GitHub Pages here].
+endif::[]
 
 == Configuration
 
