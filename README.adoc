@@ -12,7 +12,7 @@ endif::[]
 
 = AsciiDoctor GitHub Pages
 
-ifdef::env-github[image:https://github.com/manoelcampos/asciidoctor-ghpages-action/workflows/asciidoctor-ghpages/badge.svg[GitHub Pages]]
+ifdef::env-github[image:https://github.com/manoelcampos/asciidoctor-ghpages-action/workflows/asciidoctor-ghpages/badge.svg[GitHub Pages,link=http://manoelcampos.com/asciidoctor-ghpages-action/]]
 
 A GitHub Action that recursively converts every `adoc` file to `html`, renaming resulting `README.html` to `index.html` then pushing all generated html and existing files to the `gh-pages` branch. It also keeps only the latest commit on the `gh-pages` branch, stoping it to grow too much. 
 
