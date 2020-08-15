@@ -9,6 +9,7 @@ inputs:
   asciidoctor_params:
     description: 'Extra parameters to passs to the asciidoctor command to customize the process of building adoc files'
     required: false
+    
 
 runs: 
   using: "composite"
@@ -40,6 +41,8 @@ runs:
   #  shell: bash  
 
   - name: Converting AsciiDoc files to HTML
+    env: 
+      INPUT_ASCIIDOCTOR_PARAMS: ${{ inputs.asciidoctor_params }}
     run: |
       echo "Extra asciidoctor params: $INPUT_ASCIIDOCTOR_PARAMS"
       find . -name "*.adoc" | xargs asciidoctor -b html $INPUT_ASCIIDOCTOR_PARAMS
