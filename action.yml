@@ -14,9 +14,11 @@ runs:
     run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
+    shell: bash
 
   - name: Asciidoctor Setup
     run: sudo apt-get install asciidoctor -y   
+    shell: bash
 
   # Avoids keeping the commit history for the gh-pages branch, 
   # so that such a branch keeps only the last commit. 
@@ -26,9 +28,11 @@ runs:
       git branch -D gh-pages 1>/dev/null 2>/dev/null || true
       git log | head -n 1 | cut -d' ' -f2 > /tmp/commit-hash.txt
       git checkout --orphan gh-pages master 1>/dev/null
+    shell: bash
 
   #- name: Checking out the gh-pages branch, keeping its history
   #  run: git checkout master -B gh-pages 1>/dev/null
+  #  shell: bash  
 
   - name: Converting AsciiDoc files to HTML
     run: |
@@ -39,6 +43,7 @@ runs:
       for FILE in `find . -name "*.html"`; do 
          git add -f "$FILE"; 
       done
+    shell: bash
 
   - name: Commiting to gh-pages and pushing changes
     run: |
@@ -46,3 +51,4 @@ runs:
       echo $MSG
       git commit -m "$MSG" 1>/dev/null 
       git push -f --quiet --set-upstream origin gh-pages 1>/dev/null 
+    shell: bash
