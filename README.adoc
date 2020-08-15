@@ -28,3 +28,10 @@ endif::[]
 
 The action currently requires no extra configuration. You have to just add it to your yml workflow file and that is it.
 You can check a basic https://github.com/manoelcampos/asciidoc-github-template/blob/master/.github/workflows/asciidoctor-ghpages.yml[workflow file here].
+
+ifndef::env-github[]
+== Project on GitHub
+
+View the https://github.com/manoelcampos/asciidoctor-ghpages-action[project on GitHub] and take the chance to give it a start.
+endif::[]
+
