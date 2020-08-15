@@ -4,6 +4,6 @@ A GitHub Action that recursively converts every `adoc` file to `html`, renaming 
 
 It also keeps only the latest commit on the `gh-pages` branch, stoping it to grow too much. The action currently requires no extra configuration. You have to just add it to your yml workflow file.
 
-== Live Demonstration
+== Live Demo
 
 We use our own poison. This repository is published in http://manoelcampos.com/asciidoctor-ghpages-action/[GitHub Pages here].
