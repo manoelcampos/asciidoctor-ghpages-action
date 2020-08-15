@@ -1,5 +1,8 @@
 name: asciidoctor-ghpages
-icon: book-open
+author: Manoel Campos da Silva Filho
+branding:
+  icon: book-open
+  color: blue
 description: Recursively converts every adoc file to html, renaming resulting README.html to index.html
 
 # Controls when the action will run. Triggers the workflow on push or pull request
