@@ -19,7 +19,7 @@ A GitHub Action for your CI workflow that recursively converts every `adoc` file
 ifdef::env-github[]
 == Live Demo
 
-We taste our own poison. This repository is published in http://manoelcampos.com/asciidoctor-ghpages-action/[GitHub Pages here].
+We taste our own poison by publishing this reposiroty in http://manoelcampos.com/asciidoctor-ghpages-action/[GitHub Pages].
 endif::[]
 
 == Configuration
