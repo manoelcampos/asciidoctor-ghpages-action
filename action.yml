@@ -49,6 +49,7 @@ runs:
     run: |
       MSG="Build AsciiDoc Files for GitHub Pages from commit `cat /tmp/commit-hash.txt`"
       echo $MSG
+      find . -name "*.adoc" | xargs git rm -f
       git commit -m "$MSG" 1>/dev/null 
       git push -f --quiet --set-upstream origin gh-pages 1>/dev/null 
     shell: bash
