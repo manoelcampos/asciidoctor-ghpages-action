@@ -1,0 +1,61 @@
+# Converts adoc files to html and push to gh-pages branch to update GitHub Pages
+
+name: asciidoctor-ghpages
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+
+    - name: Configure git
+      run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+    - name: Asciidoctor Setup
+      run: sudo apt-get install asciidoctor -y   
+
+    # Avoids keeping the commit history for the gh-pages branch, 
+    # so that such a branch keeps only the last commit. 
+    # But this slows down the GitHub Pages website build process.
+    - name: Checking out the gh-pages branch without keeping its history
+      run: |
+        git branch -D gh-pages 1>/dev/null 2>/dev/null || true
+        git log | head -n 1 | cut -d' ' -f2 > /tmp/commit-hash.txt
+        git checkout --orphan gh-pages master 1>/dev/null
+
+    #- name: Checking out the gh-pages branch, keeping its history
+    #  run: git checkout master -B gh-pages 1>/dev/null
+
+    - name: Converting AsciiDoc files to HTML
+      run: |
+        find . -name "*.adoc" | xargs asciidoctor -b html 
+        for FILE in `find . -name "README.html"`; do 
+            mv "$FILE" "`dirname $FILE`/index.html"; 
+        done
+        for FILE in `find . -name "*.html"`; do 
+           git add -f "$FILE"; 
+        done
+
+    - name: Commiting to gh-pages and pushing changes
+      run: |
+        MSG="Build AsciiDoc Files for GitHub Pages from commit `cat /tmp/commit-hash.txt`"
+        echo $MSG
+        git commit -m "$MSG" 1>/dev/null 
+        git push -f --quiet --set-upstream origin gh-pages 1>/dev/null 
+
