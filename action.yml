@@ -21,7 +21,19 @@ inputs:
     description: 'Defines the name of the main AsciiDoc file that will be used if you are generating an ebook in PDF or any other supported format. For instance, if the main ebook file is "ebook.adoc", just inform "ebook" here.'
     default: 'README'
     required: false
-              
+  slides_build:
+    description: 'Defines if a slides.html file should be built using AsciiDoc Reveal.js. The slides.html file is generated inside the gh-pages branch.'
+    default: 'false'
+    required: false
+  slides_main_adoc_file:
+    description: 'Defines the name of the main AsciiDoc file that will be used if you are generating slides with Reveal.js. For instance, if the slides file is "slides.adoc", just inform "slides" here.'
+    default: 'README'
+    required: false
+  slides_skip_asciidoctor_build:
+    description: 'If slides are being generated using AsciiDoc Reveal.js, you may not want to build the regular html files using the asciidoctor command, but just using the asciidoctor-revealjs command. In order to generate only the slides.html instead of the regular html files, set this config to true.'
+    default: 'false'
+    required: false
+                  
 runs: 
   using: "composite"
 
@@ -57,39 +69,63 @@ runs:
     env: 
       INPUT_ASCIIDOCTOR_PARAMS: ${{ inputs.asciidoctor_params }}
       INPUT_ADOC_FILE_EXT: ${{ inputs.adoc_file_ext }}
+      # If slides are being generated, the user can skip the execution of the asciidoctor command
+      SLIDES_SKIP_ASCIIDOCTOR_BUILD: ${{ inputs.slides_skip_asciidoctor_build }}
     run: |
-      if [[ $INPUT_ADOC_FILE_EXT != .* ]]; then 
-          INPUT_ADOC_FILE_EXT=".$INPUT_ADOC_FILE_EXT"; 
+      if [[ $SLIDES_SKIP_ASCIIDOCTOR_BUILD == false ]]; then 
+        if [[ $INPUT_ADOC_FILE_EXT != .* ]]; then 
+            INPUT_ADOC_FILE_EXT=".$INPUT_ADOC_FILE_EXT"; 
+        fi
+        find . -name "*$INPUT_ADOC_FILE_EXT" | xargs asciidoctor -b html $INPUT_ASCIIDOCTOR_PARAMS
+        for FILE in `find . -name "README.html"`; do 
+            mv "$FILE" "`dirname $FILE`/index.html"; 
+        done
+        for FILE in `find . -name "*.html"`; do 
+          git add -f "$FILE"; 
+        done
+        find . -name "*$INPUT_ADOC_FILE_EXT" | xargs git rm -f --cached
       fi
-      find . -name "*$INPUT_ADOC_FILE_EXT" | xargs asciidoctor -b html $INPUT_ASCIIDOCTOR_PARAMS
-      for FILE in `find . -name "README.html"`; do 
-          mv "$FILE" "`dirname $FILE`/index.html"; 
-      done
-      for FILE in `find . -name "*.html"`; do 
-         git add -f "$FILE"; 
-      done
-      find . -name "*$INPUT_ADOC_FILE_EXT" | xargs git rm -f --cached
     shell: bash
 
   - name: Build an ebook.pdf from the AsciiDoc files
     env: 
       INPUT_PDF_BUILD: ${{ inputs.pdf_build }}
       INPUT_ADOC_FILE_EXT: ${{ inputs.adoc_file_ext }}
-      INPUT_MAIN_ADOC_EBOOK_FILE: ${{ inputs.main_adoc_ebook_file }}
+      EBOOK_MAIN_ADOC_FILE: ${{ inputs.ebook_main_adoc_file }}
     run: |
       if [[ $INPUT_ADOC_FILE_EXT != .* ]]; then 
         INPUT_ADOC_FILE_EXT=".$INPUT_ADOC_FILE_EXT"; 
       fi
       if [[ $INPUT_PDF_BUILD == true ]]; then 
         PDF_FILE="ebook.pdf"
-        INPUT_MAIN_ADOC_EBOOK_FILE="$INPUT_MAIN_ADOC_EBOOK_FILE$INPUT_ADOC_FILE_EXT"
+        EBOOK_MAIN_ADOC_FILE="$EBOOK_MAIN_ADOC_FILE$INPUT_ADOC_FILE_EXT"
         sudo gem install asciidoctor-pdf
-        MSG="Building $PDF_FILE ebook from $INPUT_MAIN_ADOC_EBOOK_FILE"
+        MSG="Building $PDF_FILE ebook from $EBOOK_MAIN_ADOC_FILE"
         echo $MSG
-        asciidoctor-pdf "$INPUT_MAIN_ADOC_EBOOK_FILE" -o "$PDF_FILE"
+        asciidoctor-pdf "$EBOOK_MAIN_ADOC_FILE" -o "$PDF_FILE"
         git add -f "$PDF_FILE"; 
       fi
     shell: bash
+
+  - name: Build AsciiDoc Reveal.js slides
+    env: 
+      INPUT_ADOC_FILE_EXT: ${{ inputs.adoc_file_ext }}
+      SLIDES_BUILD: ${{ inputs.slides_build }}
+      SLIDES_MAIN_ADOC_FILE: ${{ inputs.slides_main_adoc_file }}
+    run: |
+      if [[ $INPUT_ADOC_FILE_EXT != .* ]]; then 
+        INPUT_ADOC_FILE_EXT=".$INPUT_ADOC_FILE_EXT"; 
+      fi
+      if [[ $SLIDES_BUILD == true ]]; then 
+        SLIDES_FILE="slides.html"
+        SLIDES_MAIN_ADOC_FILE="$SLIDES_MAIN_ADOC_FILE$INPUT_ADOC_FILE_EXT"
+        sudo gem install asciidoctor-revealjs
+        MSG="Building $SLIDES_FILE with AsciiDoc Reveal.js from $SLIDES_MAIN_ADOC_FILE"
+        echo $MSG
+        asciidoctor-revealjs "$SLIDES_MAIN_ADOC_FILE" -o "$SLIDES_FILE"
+        git add -f "$SLIDES_FILE"; 
+      fi
+    shell: bash    
 
   - name: Commiting changes to gh-pages branch
     env: 
