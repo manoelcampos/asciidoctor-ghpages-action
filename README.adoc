@@ -38,3 +38,13 @@ ifndef::env-github[]
 View the https://github.com/manoelcampos/asciidoctor-ghpages-action[project on GitHub] and take the chance to give it a star.
 endif::[]
 
+== Building an e-book
+
+The action enables the automatic generation of an `ebook.pdf` file from the AsciiDoc files. The pdf is pushed to the `gh-pages` branch too.
+ifdef::env-github,env-browser[]
+A sample PDF ebook is https://github.com/manoelcampos/asciidoctor-ghpages-action/blob/gh-pages/ebook.pdf[available here].
+endif::[]
+
+ifndef::env-github,env-browser[]
+IMPORTANT: An always updated version of this ebook is https://github.com/manoelcampos/asciidoctor-ghpages-action/blob/gh-pages/ebook.pdf[available here].
+endif::[]

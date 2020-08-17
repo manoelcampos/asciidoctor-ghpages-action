@@ -13,7 +13,15 @@ inputs:
     description: 'The extension you are using for your AsciiDoc Files'
     default: '.adoc'
     required: false
-
+  pdf_build:
+    description: 'Defines if a PDF ebook should be built along with the html files. That will generate an ebook.pdf file inside the gh-pages branch.'
+    default: 'false'
+    required: false
+  ebook_main_adoc_file:
+    description: 'Defines the name of the main AsciiDoc file that will be used if you are generating an ebook in PDF or any other supported format. For instance, if the main ebook file is "ebook.adoc", just inform "ebook" here.'
+    default: 'README'
+    required: false
+              
 runs: 
   using: "composite"
 
@@ -60,9 +68,34 @@ runs:
       for FILE in `find . -name "*.html"`; do 
          git add -f "$FILE"; 
       done
+      find . -name "*$INPUT_ADOC_FILE_EXT" | xargs git rm -f --cached
+    shell: bash
+
+  - name: Build an ebook.pdf from the AsciiDoc files
+    env: 
+      INPUT_PDF_BUILD: ${{ inputs.pdf_build }}
+      INPUT_ADOC_FILE_EXT: ${{ inputs.adoc_file_ext }}
+      INPUT_MAIN_ADOC_EBOOK_FILE: ${{ inputs.main_adoc_ebook_file }}
+    run: |
+      if [[ $INPUT_ADOC_FILE_EXT != .* ]]; then 
+        INPUT_ADOC_FILE_EXT=".$INPUT_ADOC_FILE_EXT"; 
+      fi
+      if [[ $INPUT_PDF_BUILD == true ]]; then 
+        PDF_FILE="ebook.pdf"
+        INPUT_MAIN_ADOC_EBOOK_FILE="$INPUT_MAIN_ADOC_EBOOK_FILE$INPUT_ADOC_FILE_EXT"
+        sudo gem install asciidoctor-pdf
+        MSG="Building $PDF_FILE ebook from $INPUT_MAIN_ADOC_EBOOK_FILE"
+        echo $MSG
+        asciidoctor-pdf "$INPUT_MAIN_ADOC_EBOOK_FILE" -o "$PDF_FILE"
+        git add -f "$PDF_FILE"; 
+      fi
+    shell: bash
+
+  - name: Commiting changes to gh-pages branch
+    env: 
+      INPUT_ADOC_FILE_EXT: ${{ inputs.adoc_file_ext }}
+    run: |
       MSG="Build $INPUT_ADOC_FILE_EXT Files for GitHub Pages from commit `cat /tmp/commit-hash.txt`"
-      echo $MSG
-      find . -name "*$INPUT_ADOC_FILE_EXT" | xargs git rm -f
       git rm -rf .github/
       git commit -m "$MSG" 1>/dev/null 
       git push -f --quiet --set-upstream origin gh-pages 1>/dev/null 
