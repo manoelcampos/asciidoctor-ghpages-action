@@ -48,3 +48,12 @@ endif::[]
 ifndef::env-github,env-browser[]
 IMPORTANT: An always updated version of this ebook is https://github.com/manoelcampos/asciidoctor-ghpages-action/blob/gh-pages/ebook.pdf[available here].
 endif::[]
+
+== AsciiDoctor Reveal.js Slides
+
+You can also build https://github.com/asciidoctor/asciidoctor-reveal.js/[AsciiDoctor Reveal.js] slides with this action.
+That will generate a slides.html file into the `gh-pages` branch. You can use the following configuration for that:
+
+- `slides_build: boolean` - enables building a slides.html file (default false)
+- `slides_main_adoc_file: string` - defines the name of the AsciiDoc source file to build the slides (default 'README')
+- `slides_skip_asciidoctor_build: boolean` -  to enable skippig the build of regular html files using the asciidoctor command, if you just want to generate the slides (default false)
