@@ -9,6 +9,10 @@ inputs:
   asciidoctor_params:
     description: 'Extra parameters to passs to the asciidoctor command to customize the process of building adoc files'
     required: false
+  adoc_file_ext:
+    description: 'The extension you are using for your AsciiDoc Files'
+    default: '.adoc'
+    required: false
 
 runs: 
   using: "composite"
@@ -44,21 +48,21 @@ runs:
   - name: Converting AsciiDoc files to HTML
     env: 
       INPUT_ASCIIDOCTOR_PARAMS: ${{ inputs.asciidoctor_params }}
+      INPUT_ADOC_FILE_EXT: ${{ inputs.adoc_file_ext }}
     run: |
-      find . -name "*.adoc" | xargs asciidoctor -b html $INPUT_ASCIIDOCTOR_PARAMS
+      if [[ $INPUT_ADOC_FILE_EXT != .* ]]; then 
+          INPUT_ADOC_FILE_EXT=".$INPUT_ADOC_FILE_EXT"; 
+      fi
+      find . -name "*$INPUT_ADOC_FILE_EXT" | xargs asciidoctor -b html $INPUT_ASCIIDOCTOR_PARAMS
       for FILE in `find . -name "README.html"`; do 
           mv "$FILE" "`dirname $FILE`/index.html"; 
       done
       for FILE in `find . -name "*.html"`; do 
          git add -f "$FILE"; 
       done
-    shell: bash
-
-  - name: Commiting to gh-pages and pushing changes
-    run: |
-      MSG="Build AsciiDoc Files for GitHub Pages from commit `cat /tmp/commit-hash.txt`"
+      MSG="Build $INPUT_ADOC_FILE_EXT Files for GitHub Pages from commit `cat /tmp/commit-hash.txt`"
       echo $MSG
-      find . -name "*.adoc" | xargs git rm -f
+      find . -name "*$INPUT_ADOC_FILE_EXT" | xargs git rm -f
       git rm -rf .github/
       git commit -m "$MSG" 1>/dev/null 
       git push -f --quiet --set-upstream origin gh-pages 1>/dev/null 
