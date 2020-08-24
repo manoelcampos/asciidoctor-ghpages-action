@@ -1,4 +1,5 @@
 :icons: font
+:numbered:
 ifdef::env-github[:outfilesuffix: .adoc]
 
 ifdef::env-github,env-browser[]
@@ -24,6 +25,12 @@ ifdef::env-github[]
 We taste our own medicine by publishing this reposiroty in http://manoelcampos.com/asciidoctor-ghpages-action/[GitHub Pages].
 endif::[]
 
+ifndef::env-github[]
+== Project on GitHub
+
+View the https://github.com/manoelcampos/asciidoctor-ghpages-action[project on GitHub] and take the chance to give it a star.
+endif::[]
+
 == Configuration
 
 You have to just add the action to your yml workflow file and that is it.
@@ -32,13 +39,7 @@ the action, which will be handed to the asciidoctor tool.
 
 You can check a complete https://github.com/manoelcampos/asciidoc-github-template/blob/master/.github/workflows/asciidoctor-ghpages.yml[workflow file here].
 
-ifndef::env-github[]
-== Project on GitHub
-
-View the https://github.com/manoelcampos/asciidoctor-ghpages-action[project on GitHub] and take the chance to give it a star.
-endif::[]
-
-== Building an e-book
+=== Building an e-book
 
 The action allows enabling the automatic generation of an `ebook.pdf` file from the AsciiDoc files. The pdf is pushed to the `gh-pages` branch too.
 To enable that, just add the following configuration:
@@ -56,7 +57,7 @@ ifndef::env-github,env-browser[]
 IMPORTANT: An always updated version of this ebook is https://github.com/manoelcampos/asciidoctor-ghpages-action/blob/gh-pages/ebook.pdf[available here].
 endif::[]
 
-== AsciiDoctor Reveal.js Slides
+=== AsciiDoctor Reveal.js Slides
 
 You can also build https://github.com/asciidoctor/asciidoctor-reveal.js/[AsciiDoctor Reveal.js] slides with this action.
 That will generate a slides.html file into the `gh-pages` branch. You can use the following configuration for that:
