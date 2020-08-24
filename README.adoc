@@ -55,5 +55,5 @@ You can also build https://github.com/asciidoctor/asciidoctor-reveal.js/[AsciiDo
 That will generate a slides.html file into the `gh-pages` branch. You can use the following configuration for that:
 
 - `slides_build: boolean` - enables building a slides.html file (default false)
-- `slides_main_adoc_file: string` - defines the name of the AsciiDoc source file to build the slides (default 'README')
+- `slides_main_adoc_file: string` - defines the name of the AsciiDoc source file to build the slides (default 'README'). **Do not include the file extension.**
 - `slides_skip_asciidoctor_build: boolean` -  to enable skippig the build of regular html files using the asciidoctor command, if you just want to generate the slides (default false)
