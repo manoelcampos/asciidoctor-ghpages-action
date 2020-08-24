@@ -35,104 +35,13 @@ inputs:
     required: false
                   
 runs: 
-  using: "composite"
-
-  # Steps represent a sequence of tasks that will be executed as part of the job
-  steps:
-  - name: Configure git
-    run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-    shell: bash
-
-  - name: Asciidoctor Setup
-    run: |
-      sudo apt-get install gem -y
-      sudo gem install asciidoctor
-    shell: bash
-
-  # Avoids keeping the commit history for the gh-pages branch, 
-  # so that such a branch keeps only the last commit. 
-  # But this slows down the GitHub Pages website build process.
-  - name: Checking out the gh-pages branch without keeping its history
-    run: |
-      git branch -D gh-pages 1>/dev/null 2>/dev/null || true
-      git log | head -n 1 | cut -d' ' -f2 > /tmp/commit-hash.txt
-      git checkout --orphan gh-pages master 1>/dev/null
-    shell: bash
-
-  #- name: Checking out the gh-pages branch, keeping its history
-  #  run: git checkout master -B gh-pages 1>/dev/null
-  #  shell: bash  
-
-  - name: Converting AsciiDoc files to HTML
-    env: 
-      INPUT_ASCIIDOCTOR_PARAMS: ${{ inputs.asciidoctor_params }}
-      INPUT_ADOC_FILE_EXT: ${{ inputs.adoc_file_ext }}
-      # If slides are being generated, the user can skip the execution of the asciidoctor command
-      SLIDES_SKIP_ASCIIDOCTOR_BUILD: ${{ inputs.slides_skip_asciidoctor_build }}
-    run: |
-      if [[ $SLIDES_SKIP_ASCIIDOCTOR_BUILD == false ]]; then 
-        if [[ $INPUT_ADOC_FILE_EXT != .* ]]; then 
-            INPUT_ADOC_FILE_EXT=".$INPUT_ADOC_FILE_EXT"; 
-        fi
-        find . -name "*$INPUT_ADOC_FILE_EXT" | xargs asciidoctor -b html $INPUT_ASCIIDOCTOR_PARAMS
-        for FILE in `find . -name "README.html"`; do 
-            mv "$FILE" "`dirname $FILE`/index.html"; 
-        done
-        for FILE in `find . -name "*.html"`; do 
-          git add -f "$FILE"; 
-        done
-        find . -name "*$INPUT_ADOC_FILE_EXT" | xargs git rm -f --cached
-      fi
-    shell: bash
-
-  - name: Build an ebook.pdf from the AsciiDoc files
-    env: 
-      INPUT_PDF_BUILD: ${{ inputs.pdf_build }}
-      INPUT_ADOC_FILE_EXT: ${{ inputs.adoc_file_ext }}
-      EBOOK_MAIN_ADOC_FILE: ${{ inputs.ebook_main_adoc_file }}
-    run: |
-      if [[ $INPUT_ADOC_FILE_EXT != .* ]]; then 
-        INPUT_ADOC_FILE_EXT=".$INPUT_ADOC_FILE_EXT"; 
-      fi
-      if [[ $INPUT_PDF_BUILD == true ]]; then 
-        PDF_FILE="ebook.pdf"
-        EBOOK_MAIN_ADOC_FILE="$EBOOK_MAIN_ADOC_FILE$INPUT_ADOC_FILE_EXT"
-        sudo gem install asciidoctor-pdf
-        MSG="Building $PDF_FILE ebook from $EBOOK_MAIN_ADOC_FILE"
-        echo $MSG
-        asciidoctor-pdf "$EBOOK_MAIN_ADOC_FILE" -o "$PDF_FILE"
-        git add -f "$PDF_FILE"; 
-      fi
-    shell: bash
-
-  - name: Build AsciiDoc Reveal.js slides
-    env: 
-      INPUT_ADOC_FILE_EXT: ${{ inputs.adoc_file_ext }}
-      SLIDES_BUILD: ${{ inputs.slides_build }}
-      SLIDES_MAIN_ADOC_FILE: ${{ inputs.slides_main_adoc_file }}
-    run: |
-      if [[ $INPUT_ADOC_FILE_EXT != .* ]]; then 
-        INPUT_ADOC_FILE_EXT=".$INPUT_ADOC_FILE_EXT"; 
-      fi
-      if [[ $SLIDES_BUILD == true ]]; then 
-        SLIDES_FILE="slides.html"
-        SLIDES_MAIN_ADOC_FILE="$SLIDES_MAIN_ADOC_FILE$INPUT_ADOC_FILE_EXT"
-        sudo gem install asciidoctor-revealjs
-        MSG="Building $SLIDES_FILE with AsciiDoc Reveal.js from $SLIDES_MAIN_ADOC_FILE"
-        echo $MSG
-        asciidoctor-revealjs "$SLIDES_MAIN_ADOC_FILE" -o "$SLIDES_FILE"
-        git add -f "$SLIDES_FILE"; 
-      fi
-    shell: bash    
-
-  - name: Commiting changes to gh-pages branch
-    env: 
-      INPUT_ADOC_FILE_EXT: ${{ inputs.adoc_file_ext }}
-    run: |
-      MSG="Build $INPUT_ADOC_FILE_EXT Files for GitHub Pages from commit `cat /tmp/commit-hash.txt`"
-      git rm -rf .github/
-      git commit -m "$MSG" 1>/dev/null 
-      git push -f --quiet --set-upstream origin gh-pages 1>/dev/null 
-    shell: bash
+  using: docker
+  image: Dockerfile
+  args:
+    - ${{ inputs.asciidoctor_params }}
+    - ${{ inputs.adoc_file_ext }}
+    - ${{ inputs.slides_build }}
+    - ${{ inputs.slides_main_adoc_file }}
+    - ${{ inputs.slides_skip_asciidoctor_build }}
+    - ${{ inputs.pdf_build }}
+    - ${{ inputs.ebook_main_adoc_file }}
