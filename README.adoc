@@ -40,7 +40,14 @@ endif::[]
 
 == Building an e-book
 
-The action enables the automatic generation of an `ebook.pdf` file from the AsciiDoc files. The pdf is pushed to the `gh-pages` branch too.
+The action allows enabling the automatic generation of an `ebook.pdf` file from the AsciiDoc files. The pdf is pushed to the `gh-pages` branch too.
+To enable that, just add the following configuration:
+
+[source, yml]
+----
+pdf_build: true
+----
+
 ifdef::env-github,env-browser[]
 A sample PDF ebook is https://github.com/manoelcampos/asciidoctor-ghpages-action/blob/gh-pages/ebook.pdf[available here].
 endif::[]
