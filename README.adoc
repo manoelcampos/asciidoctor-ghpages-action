@@ -1,5 +1,6 @@
 :icons: font
 :numbered:
+:title: AsciiDoctor GitHub Pages Action
 ifdef::env-github[:outfilesuffix: .adoc]
 
 ifdef::env-github,env-browser[]
@@ -11,13 +12,20 @@ ifdef::env-github,env-browser[]
 :warning-caption: :warning:
 endif::[]
 
-= AsciiDoctor GitHub Pages Action
+ifdef::env-github[]
+= {title} image:https://github.com/manoelcampos/asciidoctor-ghpages-action/workflows/asciidoctor-ghpages/badge.svg[GitHub Pages,link=http://manoelcampos.com/asciidoctor-ghpages-action/]
+endif::[]
+
+ifndef::env-github[]
+= {title}
+endif::[]
+
+pass:[<a href="https://buymeacoff.ee/manoelcampos" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 30px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>]
+
 
 ifndef::env-github,env-browser[]
 IMPORTANT: An always updated version of this ebook is https://github.com/manoelcampos/asciidoctor-ghpages-action/blob/gh-pages/ebook.pdf[available here].
 endif::[]
-
-ifdef::env-github[image:https://github.com/manoelcampos/asciidoctor-ghpages-action/workflows/asciidoctor-ghpages/badge.svg[GitHub Pages,link=http://manoelcampos.com/asciidoctor-ghpages-action/]]
 
 A GitHub Action for your CI workflow that recursively converts every `adoc` file to `html`, renaming resulting `README.html` to `index.html` then pushing all generated html and existing files to the `gh-pages` branch. It also keeps only the latest commit on the `gh-pages` branch, stoping it to grow too much. 
 
