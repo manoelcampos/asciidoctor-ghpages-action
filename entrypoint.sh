@@ -20,13 +20,23 @@ git config --local user.email "action@github.com"
 git config --local user.name "GitHub Action"
 
 
+# Taking care of the fact that GitHub repos can have a default
+# branch which can either be named master or main
+
+default_branch="master"
+if ! git show-branch --list $default_branch; then
+   default_branch="main"
+fi
+echo "Default branch: $default_branch"
+
 # Avoids keeping the commit history for the gh-pages branch, 
 # so that such a branch keeps only the last commit. 
 # But this slows down the GitHub Pages website build process.
 echo "Checking out the gh-pages branch without keeping its history"
 git branch -D gh-pages 1>/dev/null 2>/dev/null || true
 git log | head -n 1 | cut -d' ' -f2 > /tmp/commit-hash.txt
-git checkout -q --orphan gh-pages master 1>/dev/null
+git fetch --all
+git checkout -q --orphan gh-pages $default_branch 1>/dev/null
 
 #echo "Checking out the gh-pages branch, keeping its history"
 #git checkout master -B gh-pages 1>/dev/null
