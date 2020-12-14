@@ -24,7 +24,7 @@ git config --local user.name "GitHub Action"
 # branch which can either be named master or main
 
 default_branch="master"
-if ! git show-branch --list $default_branch; then
+if ! git show-branch --list $default_branch 2>/dev/null; then
    default_branch="main"
 fi
 echo "Default branch: $default_branch"
