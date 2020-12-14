@@ -27,7 +27,7 @@ ifndef::env-github,env-browser[]
 IMPORTANT: An always updated version of this ebook is https://github.com/manoelcampos/asciidoctor-ghpages-action/blob/gh-pages/ebook.pdf[available here].
 endif::[]
 
-A GitHub Action for your CI workflow that recursively converts every `adoc` file to `html`, renaming resulting `README.html` to `index.html` then pushing all generated html and existing files to the `gh-pages` branch. It also keeps only the latest commit on the `gh-pages` branch, stoping it to grow too much. 
+A GitHub Action that builds AsciiDoc GitHub Pages in your CI workflow. It recursively converts every `adoc` file to `html`, renaming resulting `README.html` to `index.html` then pushing all generated html and existing files to the `gh-pages` branch. It also keeps only the latest commit on the `gh-pages` branch, stoping it to grow too much. 
 
 After configuring the action, your GitHub Pages will be available at `http&#58;//your-username.github.io/your-repository`.
 
