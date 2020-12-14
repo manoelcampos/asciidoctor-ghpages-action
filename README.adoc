@@ -31,6 +31,8 @@ A GitHub Action for your CI workflow that recursively converts every `adoc` file
 
 After configuring the action, your GitHub Pages will be available at `http&#58;//your-username.github.io/your-repository`.
 
+WARNING: Keep in mind that every time the action is executed, the `gh-pages` branch is wiped out. If you manually add anything to it, the content will be lost.
+
 ifdef::env-github[]
 == Live Demo
 
