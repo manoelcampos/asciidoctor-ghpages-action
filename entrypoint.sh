@@ -23,14 +23,11 @@ git config --local user.name "GitHub Action"
 # Taking care of the fact that GitHub repos can have a default
 # branch which can either be named master or main
 
-main_branch="main"
 default_branch="master"
-
-if [ `git branch --list $main_branch` ]
-then
-   echo "Using main as default branch instead of master"
-   default_branch=$main_branch
+if ! git show-branch --list $default_branch; then
+   default_branch="main"
 fi
+echo "Default branch: $default_branch"
 
 # Avoids keeping the commit history for the gh-pages branch, 
 # so that such a branch keeps only the last commit. 
@@ -39,7 +36,7 @@ echo "Checking out the gh-pages branch without keeping its history"
 git branch -D gh-pages 1>/dev/null 2>/dev/null || true
 git log | head -n 1 | cut -d' ' -f2 > /tmp/commit-hash.txt
 git fetch --all
-git checkout -q --orphan gh-pages "$default_branch" 1>/dev/null
+git checkout -q --orphan gh-pages $default_branch 1>/dev/null
 
 #echo "Checking out the gh-pages branch, keeping its history"
 #git checkout master -B gh-pages 1>/dev/null
