@@ -72,7 +72,7 @@ if [[ $INPUT_SLIDES_BUILD == true ]]; then
     INPUT_SLIDES_MAIN_ADOC_FILE="$INPUT_SLIDES_MAIN_ADOC_FILE$INPUT_ADOC_FILE_EXT"
     MSG="Building $SLIDES_FILE with AsciiDoc Reveal.js from $INPUT_SLIDES_MAIN_ADOC_FILE"
     echo $MSG
-    asciidoctor-revealjs "$INPUT_SLIDES_MAIN_ADOC_FILE" -o "$SLIDES_FILE"
+    asciidoctor-revealjs -a revealjsdir=https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.9.2 "$INPUT_SLIDES_MAIN_ADOC_FILE" -o "$SLIDES_FILE" 
     git add -f "$SLIDES_FILE"; 
 fi
 
