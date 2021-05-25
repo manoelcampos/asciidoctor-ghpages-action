@@ -32,14 +32,14 @@ echo "Default branch: $default_branch"
 # Avoids keeping the commit history for the gh-pages branch, 
 # so that such a branch keeps only the last commit. 
 # But this slows down the GitHub Pages website build process.
-echo "Checking out the gh-pages branch without keeping its history"
-git branch -D gh-pages 1>/dev/null 2>/dev/null || true
-git log | head -n 1 | cut -d' ' -f2 > /tmp/commit-hash.txt
-git fetch --all
-git checkout -q --orphan gh-pages $default_branch 1>/dev/null
+# echo "Checking out the gh-pages branch without keeping its history"
+# git branch -D gh-pages 1>/dev/null 2>/dev/null || true
+# git log | head -n 1 | cut -d' ' -f2 > /tmp/commit-hash.txt
+# git fetch --all
+# git checkout -q --orphan gh-pages $default_branch 1>/dev/null
 
 #echo "Checking out the gh-pages branch, keeping its history"
-#git checkout master -B gh-pages 1>/dev/null
+git checkout $default_branch -B gh-pages 1>/dev/null
 
 
 if [[ $INPUT_SLIDES_SKIP_ASCIIDOCTOR_BUILD == false ]]; then 
