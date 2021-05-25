@@ -22,7 +22,7 @@ git config --local user.name "GitHub Action"
 # Gets latest commit hash for pushed branch
 COMMIT_HASH=$(git rev-parse HEAD)
 
-echo "Checking out the gh-pages branch, keeping its history"
+echo "Checking out the gh-pages branch (keeping its history) from commit $COMMIT_HASH"
 git fetch --all
 git checkout $COMMIT_HASH -B gh-pages
 
