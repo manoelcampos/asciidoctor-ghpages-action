@@ -38,7 +38,7 @@ echo "Default branch: $default_branch"
 # git fetch --all
 # git checkout -q --orphan gh-pages $default_branch 1>/dev/null
 
-#echo "Checking out the gh-pages branch, keeping its history"
+echo "Checking out the gh-pages branch, keeping its history"
 git checkout $default_branch -B gh-pages 1>/dev/null
 
 
