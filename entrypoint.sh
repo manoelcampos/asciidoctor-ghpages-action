@@ -19,28 +19,12 @@ apk add openssh-client -q > /dev/null
 git config --local user.email "action@github.com"
 git config --local user.name "GitHub Action"
 
+# Gets latest commit hash for pushed branch
+COMMIT_HASH=$(git rev-parse HEAD)
 
-# Taking care of the fact that GitHub repos can have a default
-# branch which can either be named master or main
-
-default_branch="master"
-if ! git show-branch --list $default_branch 2>/dev/null; then
-   default_branch="main"
-fi
-echo "Default branch: $default_branch"
-
-# Avoids keeping the commit history for the gh-pages branch, 
-# so that such a branch keeps only the last commit. 
-# But this slows down the GitHub Pages website build process.
-echo "Checking out the gh-pages branch without keeping its history"
-git branch -D gh-pages 1>/dev/null 2>/dev/null || true
-git log | head -n 1 | cut -d' ' -f2 > /tmp/commit-hash.txt
+echo "Checking out the gh-pages branch (keeping its history) from commit $COMMIT_HASH"
 git fetch --all
-git checkout -q --orphan gh-pages $default_branch 1>/dev/null
-
-#echo "Checking out the gh-pages branch, keeping its history"
-#git checkout master -B gh-pages 1>/dev/null
-
+git checkout $COMMIT_HASH -B gh-pages
 
 if [[ $INPUT_SLIDES_SKIP_ASCIIDOCTOR_BUILD == false ]]; then 
     echo "Converting AsciiDoc files to HTML"
@@ -76,9 +60,9 @@ if [[ $INPUT_SLIDES_BUILD == true ]]; then
     git add -f "$SLIDES_FILE"; 
 fi
 
-MSG="Build $INPUT_ADOC_FILE_EXT Files for GitHub Pages from commit `cat /tmp/commit-hash.txt`"
+MSG="Build $INPUT_ADOC_FILE_EXT Files for GitHub Pages from $COMMIT_HASH"
 git rm -rf .github/
-echo "Commiting changes to gh-pages branch"
+echo "Committing changes to gh-pages branch"
 git commit -m "$MSG" 1>/dev/null
 
 echo "
@@ -101,4 +85,4 @@ if ! ssh -T git@github.com > /dev/null 2>/dev/null; then
 fi
 
 echo "Pushing changes back to the remote repository"
-git push -f --set-upstream origin gh-pages 
+git push -f --set-upstream origin gh-pages
