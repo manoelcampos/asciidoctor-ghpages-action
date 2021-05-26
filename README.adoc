@@ -51,7 +51,7 @@ You have to just add the action to your yml workflow file and that is it.
 You can optionally customize the build by giving extra parameters to
 the action, which will be handed to the asciidoctor tool.
 
-You can check a complete https://github.com/manoelcampos/asciidoc-github-template/blob/master/.github/workflows/asciidoctor-ghpages.yml[workflow file here].
+You can check a complete https://github.com/manoelcampos/asciidoctor-ghpages-action/blob/main/.github/workflows/asciidoctor-ghpages.yml[workflow file here]. If you don't want to use the GitHub Action interface and just copy that file to the same place inside your repository, that may work out of the box.
 
 === Building an e-book
 
