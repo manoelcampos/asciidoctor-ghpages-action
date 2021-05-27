@@ -3,7 +3,7 @@ author: Manoel Campos da Silva Filho
 branding:
   icon: book-open
   color: blue
-description: 'Build AsciiDoc GitHub Pages: recursively converts every adoc file to html, renaming resulting README.html to index.html. It also enables generating an ebook.pdf or AsciiDoctor Reveal.js slides Recursively converts every adoc file to html, renaming resulting README.html to index.html'
+description: 'Build AsciiDoc GitHub Pages: renames resulting README.html to index.html. Generates an ebook.pdf or Reveal.js slides'
 
 inputs:
   asciidoctor_params:
