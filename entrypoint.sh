@@ -22,9 +22,26 @@ git config --local user.name "GitHub Action"
 # Gets latest commit hash for pushed branch
 COMMIT_HASH=$(git rev-parse HEAD)
 
-echo "Checking out the gh-pages branch (keeping its history) from commit $COMMIT_HASH"
 git fetch --all
-git checkout $COMMIT_HASH -B gh-pages
+
+HAS_SOURCE_DIR=true
+if [[ "$INPUT_SOURCE_DIR" == "." || "$INPUT_SOURCE_DIR" == "./" ]]; then
+  HAS_SOURCE_DIR=false
+fi
+
+if [[ $HAS_SOURCE_DIR == true ]]; then
+  echo "Checking out the gh-pages branch on $INPUT_SOURCE_DIR (without keeping its history) from commit $COMMIT_HASH"
+  git branch -D gh-pages 1>/dev/null 2>/dev/null || true
+  git checkout -q --orphan gh-pages "$COMMIT_HASH" 1>/dev/null
+  mv "$INPUT_SOURCE_DIR" /tmp/source
+  #Ignores directories . and .git
+  find . -not -path './.git*' -not -name '.' | xargs rm -rf
+  mv /tmp/source/* .
+  git add .
+else
+  echo "Checking out the gh-pages branch (keeping its history) from commit $COMMIT_HASH"
+  git checkout "$COMMIT_HASH" -B gh-pages
+fi
 
 if [[ $INPUT_SLIDES_SKIP_ASCIIDOCTOR_BUILD == false ]]; then 
     echo "Converting AsciiDoc files to HTML"
@@ -61,11 +78,11 @@ if [[ $INPUT_SLIDES_BUILD == true ]]; then
 fi
 
 # Executes any post-processing command provided by the user, before changes are committed.
-# If not command is provided, the default value is just an echo command.
+# If no command is provided, the default value is just an echo command.
 eval "$INPUT_POST_BUILD"
 
 MSG="Build $INPUT_ADOC_FILE_EXT Files for GitHub Pages from $COMMIT_HASH"
-git rm -rf .github/
+git rm -rf .github/ || true
 echo "Committing changes to gh-pages branch"
 git commit -m "$MSG" 1>/dev/null
 

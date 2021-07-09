@@ -6,8 +6,12 @@ branding:
 description: 'Build AsciiDoc GitHub Pages: renames resulting README.html to index.html. Generates an ebook.pdf or Reveal.js slides'
 
 inputs:
+  source_dir:
+    description: 'Defines the source root directory from where AsciiDoc files will be built and other containing files will be published to gh-pages.'
+    default: '.'
+    required: false
   asciidoctor_params:
-    description: 'Extra parameters to passs to the asciidoctor command to customize the process of building adoc files'
+    description: 'Extra parameters to pass to the asciidoctor command to customize the process of building adoc files'
     required: false
   adoc_file_ext:
     description: 'The extension you are using for your AsciiDoc Files'
@@ -42,6 +46,7 @@ runs:
   using: docker
   image: Dockerfile
   args:
+    - ${{ inputs.source_dir }}
     - ${{ inputs.asciidoctor_params }}
     - ${{ inputs.adoc_file_ext }}
     - ${{ inputs.slides_build }}
