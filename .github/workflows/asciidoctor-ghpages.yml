@@ -29,4 +29,5 @@ jobs:
         # adoc_file_ext: .ascii # default is .adoc
         # source_dir: docs/ # default is .
         # slides_build: true
+        # pre_build:
         # post_build:

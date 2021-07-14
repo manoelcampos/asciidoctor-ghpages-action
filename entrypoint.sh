@@ -3,8 +3,6 @@
 # Exit if a command fails
 set -e
 
-sh -c "echo 'Input Parameters:' $*"
-
 OWNER="$(echo $GITHUB_REPOSITORY| cut -d'/' -f 1)"
 
 if [[ "$INPUT_ADOC_FILE_EXT" != .* ]]; then 
@@ -42,6 +40,11 @@ else
   echo "Checking out the gh-pages branch (keeping its history) from commit $COMMIT_HASH"
   git checkout "$COMMIT_HASH" -B gh-pages
 fi
+
+# Executes any arbitrary shell command (such as packages installation and environment setup)
+# before starting build.
+# If no command is provided, the default value is just an echo command.
+eval "$INPUT_PRE_BUILD"
 
 if [[ $INPUT_SLIDES_SKIP_ASCIIDOCTOR_BUILD == false ]]; then 
     echo "Converting AsciiDoc files to HTML"

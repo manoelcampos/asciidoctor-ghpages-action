@@ -37,6 +37,10 @@ inputs:
     description: 'If slides are being generated using AsciiDoc Reveal.js, you may not want to build the regular html files using the asciidoctor command, but just using the asciidoctor-revealjs command. In order to generate only the slides.html instead of the regular html files, set this config to true.'
     default: 'false'
     required: false
+  pre_build:
+    description: 'Any arbitrary shell command to be executed before the asciidoc build is started. Optional.'
+    default: 'echo "No pre build command provided."'
+    required: false
   post_build:
     description: 'Any arbitrary shell command to be executed after the asciidoc build is complete and before committing changes on gh-pages branch. Optional.'
     default: 'echo "No post build command provided."'
@@ -54,4 +58,5 @@ runs:
     - ${{ inputs.slides_skip_asciidoctor_build }}
     - ${{ inputs.pdf_build }}
     - ${{ inputs.ebook_main_adoc_file }}
+    - ${{ inputs.pre_build }}
     - ${{ inputs.post_build }}
