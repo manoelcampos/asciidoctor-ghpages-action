@@ -51,7 +51,7 @@ if [[ $INPUT_SLIDES_SKIP_ASCIIDOCTOR_BUILD == false ]]; then
     find . -name "*$INPUT_ADOC_FILE_EXT" | xargs asciidoctor -b html $INPUT_ASCIIDOCTOR_PARAMS
 
     for FILE in `find . -name "README.html"`; do 
-        ln -s "$FILE" "`dirname $FILE`/index.html"; 
+        ln -s "README.html" "`dirname $FILE`/index.html"; 
     done
 
     for FILE in `find . -name "*.html"`; do 
