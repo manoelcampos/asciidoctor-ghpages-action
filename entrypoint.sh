@@ -5,8 +5,8 @@ set -e
 
 OWNER="$(echo $GITHUB_REPOSITORY| cut -d'/' -f 1)"
 
-if [[ "$INPUT_ADOC_FILE_EXT" != .* ]]; then 
-    INPUT_ADOC_FILE_EXT=".$INPUT_ADOC_FILE_EXT"; 
+if [[ "$INPUT_ADOC_FILE_EXT" != .* ]]; then
+    INPUT_ADOC_FILE_EXT=".$INPUT_ADOC_FILE_EXT";
 fi
 
 # Steps represent a sequence of tasks that will be executed as part of the job
@@ -46,19 +46,19 @@ fi
 # If no command is provided, the default value is just an echo command.
 eval "$INPUT_PRE_BUILD"
 
-if [[ $INPUT_SLIDES_SKIP_ASCIIDOCTOR_BUILD == false ]]; then 
+if [[ $INPUT_SLIDES_SKIP_ASCIIDOCTOR_BUILD == false ]]; then
     echo "Converting AsciiDoc files to HTML"
     find . -name "*$INPUT_ADOC_FILE_EXT" | xargs asciidoctor -b html $INPUT_ASCIIDOCTOR_PARAMS
 
-    for FILE in `find . -name "README.html"`; do 
-        ln -s "README.html" "`dirname $FILE`/index.html"; 
+    for FILE in `find . -name "README.html"`; do
+        ln -s "README.html" "`dirname $FILE`/index.html";
     done
 
     find . -name "*$INPUT_ADOC_FILE_EXT" | xargs git rm -f --cached
 fi
 
 PDF_FILE="ebook.pdf"
-if [[ $INPUT_PDF_BUILD == true ]]; then 
+if [[ $INPUT_PDF_BUILD == true ]]; then
     INPUT_EBOOK_MAIN_ADOC_FILE="$INPUT_EBOOK_MAIN_ADOC_FILE$INPUT_ADOC_FILE_EXT"
     MSG="Building $PDF_FILE ebook from $INPUT_EBOOK_MAIN_ADOC_FILE"
     echo $MSG
@@ -66,12 +66,12 @@ if [[ $INPUT_PDF_BUILD == true ]]; then
 fi
 
 SLIDES_FILE="slides.html"
-if [[ $INPUT_SLIDES_BUILD == true ]]; then 
+if [[ $INPUT_SLIDES_BUILD == true ]]; then
     echo "Build AsciiDoc Reveal.js slides"
     INPUT_SLIDES_MAIN_ADOC_FILE="$INPUT_SLIDES_MAIN_ADOC_FILE$INPUT_ADOC_FILE_EXT"
     MSG="Building $SLIDES_FILE with AsciiDoc Reveal.js from $INPUT_SLIDES_MAIN_ADOC_FILE"
     echo $MSG
-    asciidoctor-revealjs -a revealjsdir=https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.9.2 "$INPUT_SLIDES_MAIN_ADOC_FILE" -o "$SLIDES_FILE" 
+    asciidoctor-revealjs -a revealjsdir=https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.9.2 "$INPUT_SLIDES_MAIN_ADOC_FILE" -o "$SLIDES_FILE"
 fi
 
 # Executes any post-processing command provided by the user, before changes are committed.
@@ -80,18 +80,18 @@ echo "Running post build command."
 eval "$INPUT_POST_BUILD"
 
 echo "Adding output files to gh-pages branch."
-if [[ $INPUT_SLIDES_SKIP_ASCIIDOCTOR_BUILD == false ]]; then 
-    for FILE in `find . -name "*.html"`; do 
-        git add -f "$FILE"; 
+if [[ $INPUT_SLIDES_SKIP_ASCIIDOCTOR_BUILD == false ]]; then
+    for FILE in `find . -name "*.html"`; do
+        git add -f "$FILE";
     done
 fi
 
-if [[ $INPUT_PDF_BUILD == true ]]; then 
-    git add -f "$PDF_FILE"; 
+if [[ $INPUT_PDF_BUILD == true ]]; then
+    git add -f "$PDF_FILE";
 fi
 
-if [[ $INPUT_SLIDES_BUILD == true ]]; then 
-    git add -f "$SLIDES_FILE"; 
+if [[ $INPUT_SLIDES_BUILD == true ]]; then
+    git add -f "$SLIDES_FILE";
 fi
 
 MSG="Build $INPUT_ADOC_FILE_EXT Files for GitHub Pages from $COMMIT_HASH"
@@ -108,7 +108,7 @@ UserKnownHostsFile=/dev/null
 # the checkout action (which is being used)
 # automatically authenticates the container using ssh.
 # If the action is running locally, for instance using https://github.com/nektos/act,
-# we need to push via https with a Personal Access Token 
+# we need to push via https with a Personal Access Token
 # which should be provided by an env variable.
 # We ca run the action locally using act with:
 #    act -s GITHUB_TOKEN=my_github_personal_access_token
