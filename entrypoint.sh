@@ -3,7 +3,7 @@
 # Exit if a command fails
 set -e
 
-OWNER="$(echo $GITHUB_REPOSITORY| cut -d'/' -f 1)"
+OWNER="$(echo "$GITHUB_REPOSITORY" | cut -d'/' -f 1)"
 
 if [[ "$INPUT_ADOC_FILE_EXT" != .* ]]; then
     INPUT_ADOC_FILE_EXT=".$INPUT_ADOC_FILE_EXT";
@@ -57,7 +57,7 @@ PDF_FILE="ebook.pdf"
 if [[ $INPUT_PDF_BUILD == true ]]; then
     INPUT_EBOOK_MAIN_ADOC_FILE="$INPUT_EBOOK_MAIN_ADOC_FILE$INPUT_ADOC_FILE_EXT"
     MSG="Building $PDF_FILE ebook from $INPUT_EBOOK_MAIN_ADOC_FILE"
-    echo $MSG
+    echo "$MSG"
     asciidoctor-pdf "$INPUT_EBOOK_MAIN_ADOC_FILE" -o "$PDF_FILE" $INPUT_ASCIIDOCTOR_PARAMS
 fi
 
@@ -66,7 +66,7 @@ if [[ $INPUT_SLIDES_BUILD == true ]]; then
     echo "Build AsciiDoc Reveal.js slides"
     INPUT_SLIDES_MAIN_ADOC_FILE="$INPUT_SLIDES_MAIN_ADOC_FILE$INPUT_ADOC_FILE_EXT"
     MSG="Building $SLIDES_FILE with AsciiDoc Reveal.js from $INPUT_SLIDES_MAIN_ADOC_FILE"
-    echo $MSG
+    echo "$MSG"
     asciidoctor-revealjs -a revealjsdir=https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.9.2 "$INPUT_SLIDES_MAIN_ADOC_FILE" -o "$SLIDES_FILE"
 fi
 
@@ -109,7 +109,7 @@ UserKnownHostsFile=/dev/null
 if ! ssh -T git@github.com > /dev/null 2>/dev/null; then
     URL="https://$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY.git"
     git remote remove origin
-    git remote add origin $URL
+    git remote add origin "$URL"
 fi
 
 echo "Pushing changes back to the remote repository"
