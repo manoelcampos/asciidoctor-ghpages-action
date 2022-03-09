@@ -33,7 +33,7 @@ if [[ $HAS_SOURCE_DIR == true ]]; then
   git checkout -q --orphan gh-pages "$COMMIT_HASH" 1>/dev/null
   mv "$INPUT_SOURCE_DIR" /tmp/source
   #Ignores directories . and .git
-  find . -not -path './.git*' -not -name '.' | xargs rm -rf
+  find . -not -path './.git*' -not -name '.' -exec rm -rf {} \;
   mv /tmp/source/* .
   git add .
 else
@@ -48,13 +48,9 @@ eval "$INPUT_PRE_BUILD"
 
 if [[ $INPUT_SLIDES_SKIP_ASCIIDOCTOR_BUILD == false ]]; then
     echo "Converting AsciiDoc files to HTML"
-    find . -name "*$INPUT_ADOC_FILE_EXT" | xargs asciidoctor -b html $INPUT_ASCIIDOCTOR_PARAMS
-
-    for FILE in `find . -name "README.html"`; do
-        ln -s "README.html" "`dirname $FILE`/index.html";
-    done
-
-    find . -name "*$INPUT_ADOC_FILE_EXT" | xargs git rm -f --cached
+    find . -name "*$INPUT_ADOC_FILE_EXT" -exec asciidoctor -b html $INPUT_ASCIIDOCTOR_PARAMS {} \;
+    find . -name "README.html" -exec ln -s "README.html" "$(dirname {})/index.html" \;
+    find . -name "*$INPUT_ADOC_FILE_EXT" -exec git rm -f --cached {} \;
 fi
 
 PDF_FILE="ebook.pdf"
@@ -81,9 +77,7 @@ eval "$INPUT_POST_BUILD"
 
 echo "Adding output files to gh-pages branch."
 if [[ $INPUT_SLIDES_SKIP_ASCIIDOCTOR_BUILD == false ]]; then
-    for FILE in `find . -name "*.html"`; do
-        git add -f "$FILE";
-    done
+    find . -name "*.html" -exec git add -f {} \;
 fi
 
 if [[ $INPUT_PDF_BUILD == true ]]; then
