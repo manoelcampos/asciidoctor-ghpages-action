@@ -9,11 +9,11 @@ if [[ "$INPUT_ADOC_FILE_EXT" != .* ]]; then
     INPUT_ADOC_FILE_EXT=".$INPUT_ADOC_FILE_EXT";
 fi
 
-# Steps represent a sequence of tasks that will be executed as part of the job
 echo "Configure git"
 apk add git -q > /dev/null
 apk add openssh-client -q > /dev/null
 
+# Changes in gh-pages branch will be shown as the "GitHub Action" user.
 git config --local user.email "action@github.com"
 git config --local user.name "GitHub Action"
 
@@ -22,11 +22,15 @@ COMMIT_HASH=$(git rev-parse HEAD)
 
 git fetch --all
 
+# Checks if the user has provided a specific source dir different from the root.
+# Only the files in the source dir are processed.
 HAS_SOURCE_DIR=true
 if [[ "$INPUT_SOURCE_DIR" == "." || "$INPUT_SOURCE_DIR" == "./" ]]; then
   HAS_SOURCE_DIR=false
 fi
 
+# If a source dir was provided, remove all other files and directories and
+# keept just the ones in the source dir, moving them to the root dir.
 if [[ $HAS_SOURCE_DIR == true ]]; then
   echo "Checking out the gh-pages branch on $INPUT_SOURCE_DIR (without keeping its history) from commit $COMMIT_HASH"
   git branch -D gh-pages 1>/dev/null 2>/dev/null || true
@@ -93,6 +97,7 @@ git rm -rf .github/ || true
 echo "Committing changes to gh-pages branch"
 git commit -m "$MSG" 1>/dev/null
 
+# Avoids confirmation about unknown host when pushing changes via ssh.
 echo "
 StrictHostKeyChecking no
 UserKnownHostsFile=/dev/null
