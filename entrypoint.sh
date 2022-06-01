@@ -14,8 +14,8 @@ apk add git -q > /dev/null
 apk add openssh-client -q > /dev/null
 
 # Changes in gh-pages branch will be shown as the "GitHub Action" user.
-git config --local user.email "action@github.com"
-git config --local user.name "GitHub Action"
+git config --global user.email "action@github.com"
+git config --global user.name "GitHub Action"
 
 # Gets latest commit hash for pushed branch
 COMMIT_HASH=$(git rev-parse HEAD)
