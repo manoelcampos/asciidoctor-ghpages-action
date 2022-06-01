@@ -13,9 +13,7 @@ echo "Configure git"
 apk add git -q > /dev/null
 apk add openssh-client -q > /dev/null
 
-# Changes in gh-pages branch will be shown as the "GitHub Action" user.
-git config --local user.email "action@github.com"
-git config --local user.name "GitHub Action"
+git config --global --add safe.directory /github/workspace
 
 # Gets latest commit hash for pushed branch
 COMMIT_HASH=$(git rev-parse HEAD)
@@ -91,6 +89,10 @@ fi
 if [[ $INPUT_SLIDES_BUILD == true ]]; then
     git add -f "$SLIDES_FILE";
 fi
+
+# Changes in gh-pages branch will be shown as the "GitHub Action" user.
+git config --global user.email "action@github.com"
+git config --global user.name "GitHub Action"
 
 MSG="Build $INPUT_ADOC_FILE_EXT Files for GitHub Pages from $COMMIT_HASH"
 git rm -rf .github/ || true
