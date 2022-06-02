@@ -98,12 +98,6 @@ git rm -rf .github/ || true
 echo "Committing changes to gh-pages branch"
 git commit -m "$MSG" 1>/dev/null
 
-# Avoids confirmation about unknown host when pushing changes via ssh.
-echo "
-StrictHostKeyChecking no
-UserKnownHostsFile=/dev/null
-" > /etc/ssh/ssh_config
-
 # If the action is being run into the GitHub Servers,
 # the checkout action (which is being used)
 # automatically authenticates the container using ssh.
