@@ -1,0 +1,30 @@
+:icons: font
+:numbered:
+:title: AsciiDoctor GitHub Pages Action
+ifdef::env-github[:outfilesuffix: .adoc]
+
+ifdef::env-github,env-browser[]
+// Exibe ícones para os blocos como NOTE e IMPORTANT no GitHub
+:caution-caption: :fire:
+:important-caption: :exclamation:
+:note-caption: :paperclip:
+:tip-caption: :bulb:
+:warning-caption: :warning:
+endif::[]
+
+= How the action works
+
+The action is very simple. It's fired everytime commits are pushed to a branch or pull request (PR).
+Everything happens inside a container created on GitHub servers to execute the action.
+Then, the following steps are performed inside the container:
+
+1. The pushed branch or PR is fetched in order to get the updated files in your repository. 
+1. Those files are copied to the gh-pages branch. The branch is created if it doesn't exist, or overriden otherwise.
+1. Pre-build command (optionally provided in the `pre_build` parameter of your workflow) is executed,
+   to perform any task you want before the AsciiDoc files are built.
+1. Then, every AsciiDoc file is built to html and added to the gh-pages branch.
+1. AsciiDoc files are removed from the gh-pages branch. 
+   All other files are kept, except yml configuration and .github/ directory.
+1. Post-build command (optionally provided in the `post_build` parameter of your workflow) is executed,
+   to perform any task you want after the AsciiDoc files are built.
+1. Changes in the gh-pages are commited and pushed to you repository, publishing your updated website.
