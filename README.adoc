@@ -13,7 +13,7 @@ ifdef::env-github,env-browser[]
 endif::[]
 
 ifdef::env-github[]
-= {title} image:https://github.com/manoelcampos/asciidoctor-ghpages-action/workflows/asciidoctor-ghpages/badge.svg[GitHub Pages,link=http://manoelcampos.com/asciidoctor-ghpages-action/]
+= {title} image:https://github.com/manoelcampos/asciidoctor-ghpages-action/workflows/asciidoctor-ghpages/badge.svg[GitHub Pages Publish,link=http://manoelcampos.com/asciidoctor-ghpages-action/]
 endif::[]
 
 ifndef::env-github[]
