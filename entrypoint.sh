@@ -13,10 +13,6 @@ echo "Configure git"
 apk add openssh-client -q > /dev/null
 
 git config --global --add safe.directory /github/workspace
-
-# Gets latest commit hash for pushed branch
-COMMIT_HASH=$(git rev-parse HEAD)
-
 git fetch --all
 
 # Checks if the user has provided a specific source dir different from the root.
@@ -29,17 +25,17 @@ fi
 # If a source dir was provided, remove all other files and directories and
 # keept just the ones in the source dir, moving them to the root dir.
 if [[ $HAS_SOURCE_DIR == true ]]; then
-  echo "Checking out the gh-pages branch on $INPUT_SOURCE_DIR (without keeping its history) from commit $COMMIT_HASH"
+  echo "Checking out the gh-pages branch on $INPUT_SOURCE_DIR (without keeping its history) from commit $GITHUB_SHA"
   git branch -D gh-pages 1>/dev/null 2>/dev/null || true
-  git checkout -q --orphan gh-pages "$COMMIT_HASH" 1>/dev/null
+  git checkout -q --orphan gh-pages "$GITHUB_SHA" 1>/dev/null
   mv "$INPUT_SOURCE_DIR" /tmp/source
   #Ignores directories . and .git
   find . -not -path './.git*' -not -name '.' -exec rm -rf {} \; || true
   mv /tmp/source/* .
   git add .
 else
-  echo "Checking out the gh-pages branch (keeping its history) from commit $COMMIT_HASH"
-  git checkout "$COMMIT_HASH" -B gh-pages
+  echo "Checking out the gh-pages branch (keeping its history) from commit $GITHUB_SHA"
+  git checkout "$GITHUB_SHA" -B gh-pages
 fi
 
 # Executes any arbitrary shell command (such as packages installation and environment setup)
@@ -93,7 +89,7 @@ fi
 git config --global user.email "action@github.com"
 git config --global user.name "GitHub Action"
 
-MSG="Build $INPUT_ADOC_FILE_EXT Files for GitHub Pages from $COMMIT_HASH"
+MSG="Build $INPUT_ADOC_FILE_EXT Files for GitHub Pages from $GITHUB_SHA"
 git rm -rf .github/ || true
 echo "Committing changes to gh-pages branch"
 git commit -m "$MSG" 1>/dev/null
