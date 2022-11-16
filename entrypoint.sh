@@ -9,14 +9,7 @@ if [[ "$INPUT_ADOC_FILE_EXT" != .* ]]; then
     INPUT_ADOC_FILE_EXT=".$INPUT_ADOC_FILE_EXT";
 fi
 
-# Install git-lfs since it is not in Alpine base image.
-echo "Install git-lfs"
-apk update
-apk add --update git-lfs
-
 echo "Configure git"
-apk add openssh-client -q > /dev/null
-
 git config --global --add safe.directory /github/workspace
 git fetch --all
 
