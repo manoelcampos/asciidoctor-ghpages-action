@@ -55,6 +55,11 @@ the action, which will be handed to the asciidoctor tool.
 
 You can check a complete https://github.com/manoelcampos/asciidoctor-ghpages-action/blob/main/.github/workflows/asciidoctor-ghpages.yml[workflow file here]. If you don't want to use the GitHub Action interface and just copy that file to the same place inside your repository, it may work out of the box.
 
+=== Troubleshooting 
+
+If you get the error "remote: Permission to git denied to github-actions[bot]",
+access `Settings > Actions > General` and select `Read and write permissions`.
+
 === Building an e-book
 
 The action allows enabling the automatic generation of an `ebook.pdf` file from the AsciiDoc files. The pdf is pushed to the `gh-pages` branch too.
