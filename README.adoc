@@ -39,7 +39,7 @@ WARNING: Keep in mind that every time the action is executed, the `gh-pages` bra
 ifdef::env-github[]
 == Live Demo
 
-We taste our own medicine by publishing this reposiroty in https://manoelcampos.github.io/asciidoctor-ghpages-action[GitHub Pages].
+We taste our own medicine by publishing this repository to https://manoelcampos.github.io/asciidoctor-ghpages-action[GitHub Pages].
 endif::[]
 
 ifndef::env-github[]
