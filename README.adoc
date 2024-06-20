@@ -108,3 +108,9 @@ from the GitHub repository and (ii) `html` file when openning this page from the
 
 
 endif::[]
+
+== FAQ
+
+=== How can I configure a custom domain?
+
+GitHub Pages need a `CNAME` file on the `gh-pages` branch. But on every action run, the `gh-pages` branch is wiped out. To make a custom domain work, just add the `CNAME` file in the root directory of your `main` or `master` branch instead and it will be copied over to the `gh-pages` branch automatically. If you have a `source_dir` configured, the `CNAME` file must be inside your configured `source_dir`.
