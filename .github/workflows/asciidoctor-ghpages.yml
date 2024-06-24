@@ -31,3 +31,4 @@ jobs:
         # slides_build: true
         # pre_build:
         # post_build:
+        # git_commit_signoff: false

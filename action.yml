@@ -45,6 +45,10 @@ inputs:
     description: 'Any arbitrary shell command to be executed after the asciidoc build is complete and before committing changes on gh-pages branch. Optional.'
     default: 'echo "No post build command provided."'
     required: false
+  git_commit_signoff:
+    description: 'If set true, the --signoff flag will be passed to git commit command, Optional.'
+    default: 'false'
+    required: false
                   
 runs: 
   using: docker
@@ -60,3 +64,4 @@ runs:
     - ${{ inputs.ebook_main_adoc_file }}
     - ${{ inputs.pre_build }}
     - ${{ inputs.post_build }}
+    - ${{ inputs.git_commit_signoff}}

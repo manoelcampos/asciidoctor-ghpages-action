@@ -83,6 +83,12 @@ if [[ $INPUT_SLIDES_BUILD == true ]]; then
     git add -f "$SLIDES_FILE";
 fi
 
+
+GIT_COMMIT_SIGNOFF="--no-signoff"
+if [[ "$INPUT_GIT_COMMIT_SIGNOFF" == true  ]]; then
+  GIT_COMMIT_SIGNOFF="--signoff"
+fi
+
 # Changes in gh-pages branch will be shown as the "GitHub Action" user.
 git config --global user.email "action@github.com"
 git config --global user.name "GitHub Action"
@@ -90,7 +96,7 @@ git config --global user.name "GitHub Action"
 MSG="Build $INPUT_ADOC_FILE_EXT Files for GitHub Pages from $GITHUB_SHA"
 git rm -rf .github/ || true
 echo "Committing changes to gh-pages branch"
-git commit -m "$MSG" 1>/dev/null
+git commit $GIT_COMMIT_SIGNOFF -m "$MSG" 1>/dev/null
 
 # If the action is being run into the GitHub Servers,
 # the checkout action (which is being used)
