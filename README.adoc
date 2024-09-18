@@ -102,7 +102,7 @@ ifndef::backend-pdf[]
 // or (ii) respective html page otherwise.
 
 The action is simple, but to show how you can create a website with multiple pages from different AsciiDoc files,
-the <<how-action-works#,details are provided here in a separeted page>>.
+the <<how-action-works#,details are provided here in a separate page>>.
 And realize the link above points to a: (i) `adoc` file when openning this page
 from the GitHub repository and (ii) `html` file when openning this page from the GitHub Pages. 
 
