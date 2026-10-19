@@ -45,6 +45,10 @@ inputs:
     description: 'Any arbitrary shell command to be executed after the asciidoc build is complete and before committing changes on gh-pages branch. Optional.'
     default: 'echo "No post build command provided."'
     required: false
+  publish_dir:
+    description: 'Defines a directory (relative to the source_dir) whose content will be the only one published to the root of the gh-pages branch. The build still uses all files from the source_dir, so docs can include files outside the publish_dir.'
+    default: '.'
+    required: false
                   
 runs: 
   using: docker
@@ -60,3 +64,4 @@ runs:
     - ${{ inputs.ebook_main_adoc_file }}
     - ${{ inputs.pre_build }}
     - ${{ inputs.post_build }}
+    - ${{ inputs.publish_dir }}

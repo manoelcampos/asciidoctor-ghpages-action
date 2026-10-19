@@ -31,3 +31,4 @@ jobs:
         # slides_build: true
         # pre_build:
         # post_build:
+        # publish_dir: docs/ # default is .
