@@ -84,6 +84,28 @@ That will generate a slides.html file into the `gh-pages` branch. You can use th
 - `slides_main_adoc_file: string` - defines the name of the AsciiDoc source file to build the slides (default 'README'). **Do not include the file extension.**
 - `slides_skip_asciidoctor_build: boolean` -  to enable skippig the build of regular html files using the asciidoctor command, if you just want to generate the slides (default false)
 
+=== Building only some AsciiDoc files
+
+By default, every AsciiDoc file is built to a separate html file.
+If you have a main file that includes other ones (such as one file per chapter),
+you may want to build just the main file. You can define which files are built using glob patterns,
+relative to the `source_dir`:
+
+[source, yml]
+----
+adoc_files: index.adoc
+----
+
+Some pattern examples:
+
+- `index.adoc`: a single file in the root directory;
+- `docs/index.adoc`: a single file inside a directory;
+- `*.adoc`: any adoc file in the root directory;
+- `**/*.adoc`: any adoc file in any directory (the default).
+
+Multiple patterns can be separated by spaces, such as `index.adoc docs/*.adoc`.
+AsciiDoc files are never published to the `gh-pages` branch, even if they are not built.
+
 === Publishing only a subdirectory
 
 By default, all files in the `source_dir` are published to the `gh-pages` branch.

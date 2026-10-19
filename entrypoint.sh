@@ -41,9 +41,33 @@ fi
 # If no command is provided, the default value is just an echo command.
 eval "$INPUT_PRE_BUILD"
 
+# Expands the glob pattern(s) given in the adoc_files input into the ADOC_FILES array.
+# If no pattern is provided, matches all files with the adoc_file_ext extension in any directory.
+find_adoc_files() {
+  local PATTERNS="${INPUT_ADOC_FILES:-**/*$INPUT_ADOC_FILE_EXT}"
+  shopt -s globstar nullglob
+  # Unquoted on purpose so that multiple patterns are split and expanded
+  ADOC_FILES=( $PATTERNS )
+  shopt -u globstar nullglob
+
+  if [[ ${#ADOC_FILES[@]} -eq 0 ]]; then
+    echo "No AsciiDoc files match the adoc_files pattern(s): $PATTERNS" >&2
+    exit 1
+  fi
+}
+
+build_html_files() {
+  find_adoc_files
+  local FILE
+  for FILE in "${ADOC_FILES[@]}"; do
+    echo "Building $FILE"
+    asciidoctor -b html $INPUT_ASCIIDOCTOR_PARAMS "$FILE"
+  done
+}
+
 if [[ $INPUT_SLIDES_SKIP_ASCIIDOCTOR_BUILD == false ]]; then
     echo "Converting AsciiDoc files to HTML"
-    find . -name "*$INPUT_ADOC_FILE_EXT" -exec asciidoctor -b html $INPUT_ASCIIDOCTOR_PARAMS {} \;
+    build_html_files
     find . -name "README.html" -execdir ln -s "README.html" "index.html" \;
     find . -name "*$INPUT_ADOC_FILE_EXT" -exec git rm -f --cached {} \;
 fi

@@ -49,8 +49,12 @@ inputs:
     description: 'Defines a directory (relative to the source_dir) whose content will be the only one published to the root of the gh-pages branch. The build still uses all files from the source_dir, so docs can include files outside the publish_dir.'
     default: '.'
     required: false
-                  
-runs: 
+  adoc_files:
+    description: 'Glob pattern(s), relative to the source_dir, matching the AsciiDoc files to be built to html (such as "index.adoc", "docs/*.adoc" or "**/*.adoc"). Multiple patterns can be separated by spaces. If not set, all files with the adoc_file_ext extension, in any directory, are built. Files not matched are not published, even if included by others.'
+    default: ''
+    required: false
+
+runs:
   using: docker
   image: Dockerfile
   args:
@@ -65,3 +69,4 @@ runs:
     - ${{ inputs.pre_build }}
     - ${{ inputs.post_build }}
     - ${{ inputs.publish_dir }}
+    - ${{ inputs.adoc_files }}

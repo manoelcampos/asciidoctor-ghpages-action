@@ -32,3 +32,4 @@ jobs:
         # pre_build:
         # post_build:
         # publish_dir: docs/ # default is .
+        # adoc_files: index.adoc # default is all adoc files in any directory: **/*.adoc
