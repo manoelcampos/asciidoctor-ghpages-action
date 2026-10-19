@@ -89,6 +89,25 @@ git config --global user.name "GitHub Action"
 
 MSG="Build $INPUT_ADOC_FILE_EXT Files for GitHub Pages from $GITHUB_SHA"
 git rm -rf .github/ || true
+
+# If the user has provided a publish dir, replaces the staged content (the git index)
+# by just the content of that dir, so that only it is published to the root of the gh-pages branch.
+# This way, the build can use files outside the publish dir (such as source code to be included in the docs).
+publish_only_dir() {
+  local PUBLISH_DIR="${INPUT_PUBLISH_DIR#./}"
+  PUBLISH_DIR="${PUBLISH_DIR%/}"
+  if [[ -z "$PUBLISH_DIR" || "$PUBLISH_DIR" == "." ]]; then
+    return
+  fi
+
+  echo "Publishing only the content of the $PUBLISH_DIR directory"
+  local TREE
+  TREE="$(git write-tree --prefix="$PUBLISH_DIR/")"
+  git read-tree "$TREE"
+}
+
+publish_only_dir
+
 echo "Committing changes to gh-pages branch"
 git commit -m "$MSG" 1>/dev/null
 

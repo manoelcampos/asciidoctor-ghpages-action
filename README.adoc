@@ -84,6 +84,21 @@ That will generate a slides.html file into the `gh-pages` branch. You can use th
 - `slides_main_adoc_file: string` - defines the name of the AsciiDoc source file to build the slides (default 'README'). **Do not include the file extension.**
 - `slides_skip_asciidoctor_build: boolean` -  to enable skippig the build of regular html files using the asciidoctor command, if you just want to generate the slides (default false)
 
+=== Publishing only a subdirectory
+
+By default, all files in the `source_dir` are published to the `gh-pages` branch.
+If your docs are inside a subdirectory (such as `manual/`) but need files outside of it to be built
+(for instance, source code included in the docs), you can publish only that subdirectory using:
+
+[source, yml]
+----
+publish_dir: manual/
+----
+
+The build still runs over the whole `source_dir`, but only the content of the `publish_dir` is pushed
+to the root of the `gh-pages` branch. The `publish_dir` path is relative to the `source_dir`.
+If the `CNAME` file is used for a custom domain, it must be inside the `publish_dir`.
+
 == Other examples
 
 If you want to check how to create a website from multiple AsciiDoc documents,
